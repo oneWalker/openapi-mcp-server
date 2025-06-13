@@ -1,0 +1,42 @@
+{
+  "name": "openapi-mcp-server",
+  "version": "0.1.4",
+  "description": "MCP server for OpenAPI",
+  "type": "module",
+  "bin": {
+    "openapi-mcp": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "prepublishOnly": "npm run build",
+    "start": "node build/index.js"
+  },
+  "keywords": [
+    "openapi-mcp",
+    "openapi",
+    "mcp",
+    "model-context-protocol",
+    "ai-tools"
+  ],
+  "author": "Brian, Kun Liu",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "dotenv": "^16.4.5",
+    "express": "^5.1.0",
+    "got": "^14.4.7",
+    "openapi-mcp-generator": "^3.1.2",
+    "raw-body": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
+  }
+}

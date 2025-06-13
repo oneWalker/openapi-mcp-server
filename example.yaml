@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Sample Service API Documentation
+  version: 1.0.0
+servers:
+  - url: example.com
+    description: ModelService API Server
+
+paths:
+  /api/model/services/{ID}:
+    get:
+      summary: Get model service API documentation
+      description: Retrieves the API documentation for a specific model service
+      parameters:
+        - name: ID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Model service ID
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            pattern: '^Bearer\s[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$'
+          description: Authorization token
+        # - name: model_id
+        #   in: query
+        #   required: true
+        #   schema:
+        #     type: string
+        #   description: Model ID
+      # requestBody:
+      #   required: true
+      #   content:
+      #     application/json:
+      #       schema:
+      #         type: object
+      #         properties:
+      #           model_version:
+      #             type: string
+      #             description: Model version
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Descriptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Title:
+                          type: string
+                          description: Title of the API documentation section
+                        Content:
+                          type: string
+                          description: Content of the API documentation section
+  /api/model/services/:
+    post:
+      summary: Call model service
+      description: Invokes a specific model service with provided parameters
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Model service ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: object
+                  properties:
+                    input:
+                      type: object
+                      description: Input parameters for the model service
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  output:
+                    type: string
+                    description: Output from the model service
+                  time:
+                    type: number
+                    description: Processing time in milliseconds
