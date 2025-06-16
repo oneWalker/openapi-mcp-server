@@ -16,15 +16,20 @@ import {
   GetToolsOptions,
 } from "openapi-mcp-generator";
 import dotenv from "dotenv";
-import got, { OptionsInit as GotOptionsInit } from "got";
+import got, { OptionsInit as GotOptionsInit, Method } from "got";
 
 dotenv.config();
 
 const baseServerUrl = process.env.BASE_SERVER_URL;
 const openapiPath = process.env.OPENAPI_PATH;
 
-interface OpenAPITool extends Tool {
-  function: (args: any) => Promise<any>;
+if (!baseServerUrl || !openapiPath) {
+  console.error("BASE_SERVER_URL and OPENAPI_PATH must be set");
+  process.exit(1);
+}
+
+interface OpenAPITool extends McpToolDefinition {
+  function?: (args: any) => Promise<any>;
 }
 
 class OpenAPIClient {
@@ -109,7 +114,7 @@ class OpenAPIClient {
         });
 
         // Call the tool function with the provided arguments
-        const result = await tool.function({
+        const result = await tool.function?.({
           path,
           headers,
           searchParams: new URLSearchParams(searchParams),
@@ -146,10 +151,10 @@ class OpenAPIClient {
         filterFn: (tool: McpToolDefinition) => true,
       };
 
-      const rawTools = await getToolsFromOpenApi(openapiPath, config);
+      const rawTools = await getToolsFromOpenApi(openapiPath as string, config);
 
       // Transform the tools to include HTTP request functionality
-      this.tools = rawTools.map((tool: McpToolDefinition) => ({
+      this.tools = rawTools.map((tool: OpenAPITool) => ({
         ...tool,
         function: async (args: {
           path: string;
@@ -158,7 +163,7 @@ class OpenAPIClient {
           jsonBody: Record<string, any>;
         }) => {
           const { path, headers, searchParams, jsonBody } = args;
-          const method = tool.method.toLowerCase();
+          const method = tool.method.toLowerCase() as Method;
 
           const url = new URL(path, config.baseUrl);
 
