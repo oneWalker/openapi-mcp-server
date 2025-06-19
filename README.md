@@ -1,6 +1,6 @@
 # OpenAPI MCP Server
 
-A Model Context Protocol (MCP) server with `StreamableHTTP` transport implementation for handling OpenAPI specifications and model service interactions
+A Quick Way to Create an MCP Server with `StreamableHTTP` transport implementation from OpenAPI docs.
 
 ## Overview
 
